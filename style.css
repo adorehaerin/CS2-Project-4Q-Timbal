@@ -1,0 +1,134 @@
+/* 🌟 1. IMPORT ROUNDED FONT */
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap');
+
+/* 🌌 2. ANIMATED PULSING STAR BACKGROUND (Fixed!) */
+body {
+    font-family: 'Quicksand', sans-serif;
+    background-color: #fff0f5; /* Soft pastel pink */
+    /* The stars are now safely double-wrapped so they don't get stuck in the corners! */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg transform='translate(30, 30)'%3E%3Cg%3E%3CanimateTransform attributeName='transform' type='scale' values='0.3; 1.2; 0.3' dur='3s' repeatCount='indefinite'/%3E%3Cpath fill='%23ffffff' fill-opacity='0.9' d='M0 -25C0 -10 -10 0 -25 0C-10 0 0 10 0 25C0 10 10 0 25 0C10 0 0 -10 0 -25Z'/%3E%3C/g%3E%3C/g%3E%3Cg transform='translate(90, 80)'%3E%3Cg%3E%3CanimateTransform attributeName='transform' type='scale' values='0.1; 1; 0.1' dur='2s' repeatCount='indefinite'/%3E%3Cpath fill='%23ffffff' fill-opacity='0.7' d='M0 -15C0 -5 -5 0 -15 0C-5 0 0 5 0 15C0 5 5 0 15 0C5 0 0 -5 0 -15Z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    animation: bg-glow 5s infinite alternate ease-in-out; 
+}
+
+/* Makes the pink sky glow softly behind the pulsing stars */
+@keyframes bg-glow {
+    0% { background-color: #fff0f5; }
+    100% { background-color: #ffe4ef; }
+}
+
+/* 🎈 3. THE MAIN FLOATING CONTAINER */
+.container {
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 40px 50px;
+    border-radius: 25px; /* Extra rounded corners */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+    position: relative;
+    border: 2px solid #ffffff;
+}
+
+.floating-container {
+    animation: float 4s ease-in-out infinite; 
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); } 
+    100% { transform: translateY(0px); }
+}
+
+/* 🐾 4. CAT LOGO STYLING */
+.cat-logo {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%; /* Perfect circle */
+    object-fit: cover;
+    margin: -80px auto 15px auto; 
+    display: block;
+    border: 6px solid white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+}
+
+/* 🎮 5. GREENER MINECRAFT TEXT */
+.splash-text {
+    color: hsl(128, 35%, 74%); /* Brighter, more vibrant green! */
+    font-weight: 700;
+    font-size: 1.3em;
+    text-shadow: 2px 2px 0px hwb(86 33% 47%); 
+    display: inline-block;
+    margin-bottom: 20px;
+    animation: pulse 1s infinite alternate; 
+}
+
+@keyframes pulse {
+    from { transform: scale(1); }
+    to { transform: scale(1.05); }
+}
+
+/* 🎨 6. BUTTONS AND INPUTS */
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px; /* Rounded inputs */
+    box-sizing: border-box;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+input:focus, textarea:focus {
+    border-color: #f9d5e5;
+    outline: none;
+}
+
+button, .btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #a8d5ba; /* Soft pastel green */
+    color: white;
+    border: none;
+    border-radius: 15px; /* Rounded buttons */
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 700;
+    font-family: 'Quicksand', sans-serif;
+    margin-top: 10px;
+    transition: 0.3s;
+    text-decoration: none;
+    display: inline-block;
+    box-sizing: border-box;
+}
+
+button:hover, .btn:hover {
+    background-color: #8cc2a2;
+    transform: translateY(-2px);
+}
+
+.flash-msg {
+    background-color: #f9d5e5;
+    color: #8b5e83;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.back-btn {
+    text-decoration: none;
+    color: #aaa;
+    font-size: 0.9em;
+    display: block;
+    text-align: left;
+    margin-bottom: 15px;
+    font-weight: 700;
+}

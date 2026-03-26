@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Login - Kaiza Corp</title>
+</head>
+<body style="font-family: 'Quicksand', system-ui, sans-serif; color: #826584; background-color: #FDF4F8; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0;">
+    
+    <div class="container floating-container" style="width: 100%; max-width: 489px; background: white; padding: 40px; border-radius: 25px; box-shadow: 0 8px 25px rgba(244, 205, 225, 0.4); text-align: center; box-sizing: border-box;">
+        
+        <div style="text-align: left; margin-bottom: 20px;">
+            <a href="{{ url_for('home') }}" style="color: #A2758E; text-decoration: none; font-weight: bold; font-size: 0.9em;">← Back Home</a>
+        </div>
+        
+        <h2 style="color: #826584; margin-top: 0; margin-bottom: 20px;">System Login 🌸</h2>
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    
+                    {% if 'successfully' in message.lower() %}
+                        <div style="background-color: #EBF5ED; color: #6C8D77; padding: 15px; border-radius: 15px; margin-bottom: 20px; font-weight: bold; font-size: 0.9em; border: 2px solid #A6D5B4;">
+                            {{ message }}
+                        </div>
+                    
+                    {% else %}
+                        <div style="background-color: #FFE6E6; color: #CC0000; padding: 15px; border-radius: 15px; margin-bottom: 20px; font-weight: bold; font-size: 0.9em; border: 2px solid #FF9999;">
+                            {{ message }}
+                        </div>
+                    {% endif %}
+                    
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        {% if locked %}
+          {% else %}
+            <form action="{{ url_for('login') }}" method="POST" style="display: flex; flex-direction: column; gap: 15px;">
+                <input type="text" name="username" placeholder="Username" style="padding: 15px; border-radius: 15px; border: 2px solid #F4CDE1; outline: none; color: #826584; font-family: inherit; font-size: 1em; box-sizing: border-box; width: 100%;">
+                
+                <input type="password" name="password" placeholder="Password" style="padding: 15px; border-radius: 15px; border: 2px solid #F4CDE1; outline: none; color: #826584; font-family: inherit; font-size: 1em; box-sizing: border-box; width: 100%;">
+                
+                <button type="submit" style="background-color: #A6D5B4; color: #5A7D65; border: none; padding: 15px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 1.05em; margin-top: 10px; width: 100%;">Enter System</button>
+            </form>
+
+            <div style="margin-top: 25px; font-size: 0.9em; color: #A2758E; border-top: 2px dashed #F4EEF1; padding-top: 20px;">
+                New employee? <br>
+                <a href="{{ url_for('register') }}" style="color: #826584; font-weight: bold; text-decoration: none; display: inline-block; margin-top: 5px;">Register here! 📝</a>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Directory - Kaiza Corp</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body style="font-family: 'Quicksand', system-ui, sans-serif; color: #826584; background-color: #FDF4F8;">
+    
+    <div class="container" style="max-width: 650px; margin: 40px auto; background: white; padding: 40px; border-radius: 25px; box-shadow: 0 8px 25px rgba(244, 205, 225, 0.4);">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #F4CDE1; padding-bottom: 20px; margin-bottom: 25px;">
+            <h2 style="color: #826584; margin: 0;">🐈‍⬛ Team Directory</h2>
+            
+            {% if user.role == 'admin' %}
+                <a href="{{ url_for('admin_panel', admin_username=username) }}" style="background-color: #F4CDE1; color: #826584; padding: 10px 20px; text-decoration: none; border-radius: 20px; font-weight: bold; font-size: 0.9em;">Back Home</a>
+            {% else %}
+                <a href="{{ url_for('submit_request', username=username) }}" style="background-color: #F4CDE1; color: #826584; padding: 10px 20px; text-decoration: none; border-radius: 20px; font-weight: bold; font-size: 0.9em;">Back Home</a>
+            {% endif %}
+        </div>
+
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              <div style="background-color: #FFE6E6; color: #CC0000; padding: 15px; border-radius: 15px; margin-bottom: 20px; text-align: center; font-weight: bold; border-left: 5px solid #FF9999;">
+                  {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+
+        {% if user.role == 'admin' %}
+            
+            <h3 style="color: #A2758E; margin-bottom: 15px;">🥠 Admin Team</h3>
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 35px;">
+                {% for uname, udata in all_data.items() %}
+                    {% if udata.role == 'admin' %}
+                        <div style="background-color: #FCF5F8; border: 2px solid #F4CDE1; padding: 15px; border-radius: 15px;">
+                            <strong style="font-size: 1.1em;">{{ udata.name }}</strong> 
+                            <span style="color: #A2758E; font-size: 0.85em;">(@{{ uname }})</span>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <h3 style="color: #A2758E; margin-bottom: 15px;">⛩️ Employee Roster</h3>
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                {% for uname, udata in all_data.items() %}
+                    {% if udata.role != 'admin' %}
+                        <div style="background-color: white; border: 2px solid #F4EEF1; padding: 15px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong style="color: #826584; font-size: 1.1em;">{{ udata.name }}</strong> 
+                                <span style="color: #A2758E; font-size: 0.85em;">(@{{ uname }})</span><br>
+                                <span style="font-size: 0.9em; color: #A2758E;">Desk: {{ udata.address }}</span>
+                            </div>
+                            
+                            <div style="display: flex; gap: 8px;">
+                                <form action="{{ url_for('admin_edit_user', admin_username=username, target_username=uname) }}" method="GET" style="margin: 0;">
+                                    <button type="submit" style="background-color: #E8DFF0; color: #7A628B; border: 2px solid #D6C5E3; padding: 8px 15px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 0.85em;">✏️ Edit User</button>
+                                </form>
+
+                                <form action="{{ url_for('delete_user', target_username=uname, admin_username=username) }}" method="POST" style="margin: 0;" onsubmit="return confirm('🚨 CONFIRMATION REQUIRED:\n\nAre you absolutely sure you want to completely delete {{ udata.name }}\'s account?\n\nThis action CANNOT be undone!');">
+                                    <button type="submit" style="background-color: #FFE6E6; color: #CC0000; border: 2px solid #FF9999; padding: 8px 15px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 0.85em;">🗑️ Delete User</button>
+                                </form>
+                            </div>
+
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+        {% else %}
+            
+            <h3 style="color: #A2758E; margin-bottom: 15px;">📂 Your Fellow Co-Workers</h3>
+            <p style="color: #A2758E; font-size: 0.9em; margin-top: 0;">Say hi to your team at the office!</p>
+
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+                {% for uname, udata in all_data.items() %}
+                    {% if udata.role != 'admin' %}
+                        <div style="background-color: #FCF5F8; border: 2px solid #F4EEF1; padding: 15px; border-radius: 15px;">
+                            <strong style="color: #826584; font-size: 1.1em;">{{ udata.name }}</strong><br>
+                            <span style="font-size: 0.9em; color: #A2758E;">Desk: {{ udata.address }}</span>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+        {% endif %}
+
+    </div>
+</body>
+</html>

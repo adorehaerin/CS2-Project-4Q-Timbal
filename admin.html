@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Kaiza Corp</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body style="font-family: 'Quicksand', system-ui, sans-serif; color: #826584; background-color: #FDF4F8; margin: 0; padding: 40px 20px;">
+    
+    <div style="max-width: 650px; width: 100%; margin: 0 auto;">
+
+        <div style="background: white; padding: 15px 25px; border-radius: 20px; box-shadow: 0 4px 15px rgba(244, 205, 225, 0.3); margin-bottom: 25px; display: flex; justify-content: center; gap: 12px; border: 2px solid #FDF4F8;">
+            <a href="{{ url_for('profile', username=admin_username) }}" style="background-color: #E8DFF0; color: #7A628B; padding: 10px 18px; text-decoration: none; border-radius: 15px; font-weight: 700; font-size: 0.9em;">Profile ⚙️</a>
+            <a href="{{ url_for('team_directory', username=admin_username) }}" style="background-color: #A6D5B4; color: #5A7D65; padding: 10px 18px; text-decoration: none; border-radius: 15px; font-weight: 700; font-size: 0.9em;">View Team 🗃️</a>
+            <a href="{{ url_for('logout') }}" style="background-color: #F4CDE1; color: #826584; padding: 10px 18px; text-decoration: none; border-radius: 15px; font-weight: 700; font-size: 0.9em;">Logout</a>
+        </div>
+
+        <div class="container" style="max-width: 850px; width: 87%; padding: 40px; border-radius: 25px; box-shadow: 0 8px 25px rgba(244, 205, 225, 0.4);">
+            
+            <div style="border-bottom: 2px dashed #ebc6d9; padding-bottom: 20px; margin-bottom: 25px; text-align: center;">
+                <h2 style="color: #826584; margin: 0; font-size: 1.6em;">🪭 Admin Dashboard</h2>
+            </div>
+
+            <div style="margin-bottom: 30px;">
+                <form action="{{ url_for('admin_panel', admin_username=admin_username) }}" method="GET" style="display: flex; gap: 10px;">
+                    <input type="text" name="q" value="{{ search_query }}" placeholder="🔍 Search requests or users..." style="flex-grow: 1; padding: 20px; border-radius: 20px; border: 2px solid #F4CDE1; outline: none; color: #826584; font-family: inherit; font-size: 0.95em;">
+                    <button type="submit" style="background-color: #A6D5B4; color: #5A7D65; border: none; border-radius: 15px; padding: 5px 12px; cursor: pointer; font-weight: 700; font-size: 0.95em; width: 85px; height: 61px;">Search</button>
+                    {% if search_query %}
+                        <a href="{{ url_for('admin_panel', admin_username=admin_username) }}" style="background-color: #F4CDE1; color: #826584; text-decoration: none; border-radius: 15px; padding: 5px 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.95em; height: 52px; width: 75px; margin-top: 5px;">Clear</a>
+                    {% endif %}
+                </form>
+            </div>
+
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                {% for message in messages %}
+                  <div style="background-color: #EBF5ED; color: #6C8D77; padding: 15px; border-radius: 15px; margin-bottom: 15px; text-align: center; font-weight: 700;">
+                      {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
+            <div>
+                {% if not all_data %}
+                    <p style="text-align: center; color: #A2758E; padding: 20px; font-weight: 700;">No results found for "{{ search_query }}" 👾</p>
+                {% endif %}
+
+                {% for username, user_info in all_data.items() %}
+                    {% if user_info.role != 'admin' %}
+                    <div style="border: 2px solid #F4EEF1; border-radius: 20px; padding: 25px; margin-bottom: 25px; background-color: #FCF5F8;">
+                        
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <h3 style="margin-top: 0; color: #826584; margin-bottom: 5px; font-size: 1.4em;">{{ user_info.name }} <span style="font-size: 0.75em; color: #A2758E; font-weight: normal;">(@{{ username }})</span></h3>
+                            <p style="margin: 0; color: #A2758E; font-size: 0.95em;"><strong>Address:</strong> {{ user_info.address }}</p>
+                        </div>
+
+                        {% if user_info.locked_until %}
+                            <div style="background-color: #FFE6E6; border-left: 5px solid #FF9999; padding: 15px; margin-bottom: 20px; border-radius: 0 15px 15px 0;">
+                                <p style="color: #CC0000; margin: 0 0 10px 0; font-size: 0.9em; text-align: center;"><strong>🔒 ACCOUNT LOCKED</strong></p>
+                                <form action="{{ url_for('unban_user', target_username=username, admin_username=admin_username) }}" method="POST" style="text-align: center;">
+                                    <button type="submit" style="background-color: #FF9999; color: white; border: none; padding: 8px 15px; border-radius: 15px; cursor: pointer; font-weight: 700;">Unban User</button>
+                                </form>
+                            </div>
+                        {% endif %}
+
+                        {% if not user_info.requests %}
+                            <p style="color: #A2758E; font-style: italic; font-size: 0.9em; margin: 0; text-align: center;">No active requests.</p>
+                        {% else %}
+                            <h4 style="margin: 0 0 10px 0; color: #826584; font-size: 1em; text-align: center;">Active Requests:</h4>
+                            {% for req in user_info.requests %}
+                                <div style="background: white; border: 2px solid #F4EEF1; padding: 20px; border-radius: 15px; margin-bottom: 15px;">
+                                    <p style="font-size: 0.8em; color: #A2758E; margin: 0 0 5px 0; text-align: center;">{{ req.date }}</p>
+                                    <p style="margin: 0 0 20px 0; font-size: 0.95em; color: #826584; text-align: center;">{{ req.text }}</p>
+
+                                    {% if req.feedback %}
+                                        <div style="background-color: #FCF5F8; color: #A2758E; padding: 15px; border-radius: 10px; font-size: 0.85em; margin-bottom: 20px; border-left: 4px solid #F4CDE1; text-align: center;">
+                                            💬 <strong>Reply:</strong> {{ req.feedback }}
+                                        </div>
+                                    {% endif %}
+
+                                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                                        
+                                        <form id="reply-form-{{ req.id }}" action="{{ url_for('reply_request', target_username=username, req_id=req.id, admin_username=admin_username) }}" method="POST" style="margin: 0;">
+                                            <input type="text" name="reply_message" placeholder="Type a reply..." style="width: 100%; padding: 15px; border-radius: 15px; border: 2px solid #F4EEF1; color: #826584; outline: none; font-family: inherit; font-size: 0.95em; box-sizing: border-box;">
+                                        </form>
+
+                                        <div style="display: flex; gap: 8px; justify-content: center;">
+                                            
+                                            <button type="submit" form="reply-form-{{ req.id }}" style="background-color: #F4CDE1; color: #826584; border: none; border-radius: 15px; padding: 8px 16px; cursor: pointer; font-weight: 700; font-size: 0.85em; width: 95px; height: 47px;font-family: inherit;">Reply</button>
+
+                                            <form action="{{ url_for('admin_edit_request', admin_username=admin_username, target_username=username, req_id=req.id) }}" method="GET" style="margin: 0;">
+                                                <button type="submit" style="background-color: #E8DFF0; color: #7A628B; border: none; border-radius: 15px; padding: 8px 16px; cursor: pointer; font-weight: 700; font-size: 0.85em; width: 95px; height: 47px; font-family: inherit;">✏️ Edit</button>
+                                            </form>
+
+                                            <form action="{{ url_for('complete_request', target_username=username, req_id=req.id, admin_username=admin_username) }}" method="POST" style="margin: 0;">
+                                                <button type="submit" style="background-color: #A6D5B4; color: #5A7D65; border: none; border-radius: 15px; padding: 8px 16px; cursor: pointer; font-weight: 700; font-size: 0.85em; width: 95px; height: 47px; font-family: inherit;">✔ Done</button>
+                                            </form>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div> 
+    </div> 
+</body>
+</html>

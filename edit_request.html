@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Request - Kaiza Corp</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body style="font-family: 'Quicksand', system-ui, sans-serif; color: #826584; background-color: #FDF4F8; margin: 0; padding: 40px 20px; display: flex; justify-content: center; align-items: center; min-height: 80vh;">
+    
+    <div style="background: white; padding: 40px; border-radius: 25px; box-shadow: 0 8px 25px rgba(244, 205, 225, 0.4); max-width: 500px; width: 100%; border: 2px solid #FDF4F8;">
+        
+        <div style="border-bottom: 2px dashed #ebc6d9; padding-bottom: 20px; margin-bottom: 25px; text-align: center;">
+            <h2 style="color: #826584; margin: 0; font-size: 1.6em;">✏️ Edit Your Request</h2>
+            <p style="color: #A2758E; font-size: 0.9em; margin: 10px 0 0 0;">Make changes to your submitted request below.</p>
+        </div>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div style="background-color: #FFE6E6; color: #CC0000; padding: 15px; border-radius: 15px; margin-bottom: 20px; font-weight: bold; font-size: 0.9em; border: 2px solid #FF9999; text-align: center;">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('edit_request', username=username, req_id=req_id) }}" method="POST" style="display: flex; flex-direction: column; gap: 20px;">
+            
+            <textarea name="updated_request_details" style="width: 100%; height: 120px; padding: 15px; border-radius: 15px; border: 2px solid #F4CDE1; outline: none; color: #826584; font-family: inherit; font-size: 1em; box-sizing: border-box; background-color: #FCF5F8;">{{ request_text }}</textarea>
+            
+            <div style="display: flex; gap: 15px; justify-content: space-between;">
+                <a href="{{ url_for('submit_request', username=username) }}" style="background-color: #E8DFF0; color: #7A628B; text-decoration: none; padding: 12px 15px; border-radius: 15px; font-weight: 700; height: 25px; text-align: center; flex-grow: 1;">Cancel</a>
+                
+                <button type="submit" style="background-color: #A6D5B4; color: #5A7D65; border: none; padding: 12px 20px; border-radius: 15px; font-weight: 700; cursor: pointer; flex-grow: 1; font-size: 1em;">Update</button>
+            </div>
+
+        </form>
+
+    </div>
+
+</body>
+</html>
