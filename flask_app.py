@@ -165,7 +165,6 @@ def register():
         try:
             age = int(age_str) # attempts to turn the text into a number
             if age < 18 or age > 79:
-                # bro if they are 80 why are they still working here
                 flash("❌ Error: Employee age must be between 18 and 79.")
                 return redirect(url_for('register'))
         except ValueError:
